@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Eyasu Zerihun (Josh-z) | Software Engineer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        /* CONTACT PAGE SPECIFIC STYLES */
+        .contact-hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, rgba(58, 134, 255, 0.1) 0%, rgba(131, 56, 236, 0.05) 100%);
+            border-radius: 16px;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            color: #3a86ff;
+            margin-bottom: 1rem;
+        }
+
+        .contact-method {
+            margin-bottom: 2rem;
+        }
+
+        .contact-method h3 {
+            color: #3a86ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(58, 134, 255, 0.1);
+            color: #3a86ff;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            background: rgba(58, 134, 255, 0.2);
+        }
+
+        /* Message Form Styles */
+        .message-form {
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #3a86ff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #2667cc;
+        }
+
+        /* Map Section */
+        .location-section {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .map-container {
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .location-description {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+
+<body class="contact-page">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="portfolio.html">Projects</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="contact-hero">
+            <h1>Let's Connect!</h1>
+            <p class="tagline">Feel free to reach out through any of these channels</p>
+        </section>
+
+        <div class="contact-container">
+            <!-- Contact Form -->
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+
+                <h2>Send Me a Message</h2>
+
+                <form class="message-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject">
+                            <option value="feedback">Feedback</option>
+                            <option value="collab">Collaboration</option>
+                            <option value="question">Question</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-address-book"></i>
+                </div>
+
+                <h2>Contact Information</h2>
+
+                <div class="contact-method">
+                    <h3>GitHub</h3>
+                    <p>View my projects and code</p>
+                    <a href="https://github.com/Joshz-090" target="_blank" class="contact-link">
+                        <i class="fab fa-github"></i> Joshz-090
+                    </a>
+                </div>
+
+                <div class="contact-method">
+                    <h3>Email</h3>
+                    <p>For professional inquiries</p>
+                    <a href="mailto:eyasuzerihun80@gmail.com" class="contact-link">
+                        <i class="fas fa-envelope"></i> eyasuzerihun80@gmail.com
+                    </a>
+                </div>
+
+                <div class="contact-method">
+                    <h3>Telegram</h3>
+                    <p>For quick messages</p>
+                    <a href="https://t.me/josh_zerish" target="_blank" class="contact-link">
+                        <i class="fab fa-telegram"></i> @josh_zerish
+                    </a>
+                </div>
+
+                <div class="contact-method">
+                    <h3>Phone/WhatsApp</h3>
+                    <p>Call or message me directly</p>
+                    <a href="tel:+251953454460" class="contact-link">
+                        <i class="fas fa-phone"></i> +251 953 454 460
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exact Location Section -->
+        <section class="location-section">
+            <h2>My Location in Adama</h2>
+            <p>You're welcome to visit me at this exact location:</p>
+
+            <div class="map-container">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3941.308037530966!2d39.26838531536671!3d8.5409800939004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b4f0e65e8e3c9%3A0x2b6e3e5b4a8e3e1!2sAdama%2C%20Ethiopia!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus"
+                    allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+            <div class="location-description">
+                <h3>Adama (Nazret), Oromia, Ethiopia</h3>
+                <p><i class="fas fa-map-marker-alt"></i> <strong>Exact Location:</strong> <a
+                        href="https://maps.app.goo.gl/ZNJYowQZLFwTb75c6" target="_blank">View on Google Maps</a></p>
+                <p>When visiting, please contact me in advance so I can welcome you properly!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="current-year">2023</span> Eyasu Zerihun (Josh-z). All rights reserved.</p>
+        <div class="social-links">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/Joshz-090" aria-label="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://t.me/josh_zerish" aria-label="Telegram" target="_blank"><i class="fab fa-telegram"></i></a>
+            <a href="mailto:eyasuzerihun80@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Update copyright year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Simple form handling
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Thank you for your message! I will respond soon.');
+            this.reset();
+        });
+    </script>
+</body>
+
+</html>

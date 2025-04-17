@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyasu Zerihun (Josh-z) | Software Engineering Student</title>
+    <meta name="description"
+        content="Personal portfolio of Eyasu Zerihun, Software Engineering student at Arba Minch University">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+
+    <style>
+        .coming-soon {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+            z-index: 1;
+        }
+
+        /* Ensure the project card is positioned relative so .coming-soon can position absolutely */
+        .project-card {
+            position: relative;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="portfolio.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Hello, I'm <span class="name">Eyasu Zerihun</span><span class="nickname">(Josh-z)</span></h1>
+            <p class="tagline">Software Engineering Student | C++ Developer | Python Learner</p>
+            <div class="hero-btns">
+                <a href="about.html" class="btn">Learn More About Me</a>
+                <a href="portfolio.html" class="btn secondary">See My Projects</a>
+            </div>
+        </section>
+
+        <section class="skills">
+            <h2>My Skills & Interests</h2>
+            <div class="skills-container">
+                <div class="skill">
+                    <i class="fas fa-code"></i>
+                    <h3>C++ Programming</h3>
+                    <p>Developed 3 console games using C++ with object-oriented programming principles and game logic
+                        implementation.</p>
+                </div>
+                <div class="skill">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Web Development</h3>
+                    <p>Building responsive websites with HTML/CSS. Currently learning JavaScript to enhance
+                        interactivity.</p>
+                </div>
+                <div class="skill">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Python</h3>
+                    <p>Expanding my skills in Python for scripting, automation, and exploring data analysis
+                        applications.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects">
+            <h2>My C++ Game Projects</h2>
+            <div class="projects-container">
+                <!-- Car Game -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-car"></i>
+                        <h3>Car Racing Game</h3>
+                    </div>
+                    <div class="project-content">
+                        <p>A console-based racing game where players dodge obstacles:</p>
+                        <ul>
+                            <li>Score increases with distance traveled</li>
+                            <li>Collision detection system</li>
+                            <li>Increasing difficulty levels</li>
+                        </ul>
+                        <div class="tech-used">
+                            <span>C++</span>
+                            <span>Console I/O</span>
+                            <span>Game Loop</span>
+                        </div>
+                    </div>
+                    <div class="coming-soon">Coming Soon</div>
+                </div>
+
+                <!-- Snake Game -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-snake"></i>
+                        <h3>Snake Game</h3>
+                    </div>
+                    <div class="project-content">
+                        <p>Classic Snake implementation with features:</p>
+                        <ul>
+                            <li>Snake growth when eating</li>
+                            <li>Wall collision detection</li>
+                            <li>Score tracking</li>
+                        </ul>
+                        <div class="tech-used">
+                            <span>C++</span>
+                            <span>2D Grid</span>
+                            <span>ASCII Graphics</span>
+                        </div>
+                    </div>
+                    <div class="coming-soon">Coming Soon</div>
+                </div>
+
+                <!-- Tic Tac Toe -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-times-circle"></i>
+                        <h3>Tic Tac Toe</h3>
+                    </div>
+                    <div class="project-content">
+                        <p>Complete Tic Tac Toe implementation:</p>
+                        <ul>
+                            <li>Two-player mode</li>
+                            <li>Win condition checking</li>
+                            <li>Simple computer AI</li>
+                        </ul>
+                        <div class="tech-used">
+                            <span>C++</span>
+                            <span>2D Arrays</span>
+                            <span>Basic AI</span>
+                        </div>
+                    </div>
+                    <div class="coming-soon">Coming Soon</div>
+                </div>
+
+                <div class="coming-soon">Coming Soon</div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="education">
+            <h2>Education</h2>
+            <div class="education-item">
+                <h3>Arba Minch University</h3>
+                <p class="degree">Bachelor of Science in Software Engineering</p>
+                <p class="year">2022 - Present</p>
+                <p>Currently pursuing comprehensive education in software development, algorithms, data structures, and
+                    system design principles.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; <span id="current-year">2023</span> Eyasu Zerihun (Josh-z). All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://t.me/josh_zerish" target="_blank" aria-label="Telegram"><i
+                    class="fab fa-telegram-plane"></i></a>
+            <a href="https://github.com/Joshz-090" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="mailto:eyasuzerihun80@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            <a href="tel:+25153454460" aria-label="Phone"><i class="fas fa-phone-alt"></i> </a>
+        </div>
+    </footer>
+
+    <!-- Simple script to update copyright year -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const msg = card.querySelector('.coming-soon');
+                msg.style.display = 'block';
+
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 2000);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

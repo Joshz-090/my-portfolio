@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Eyasu Zerihun</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        /* PROJECTS COMING SOON ANIMATION */
+        .construction {
+            text-align: center;
+            padding: 5rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .construction-icon {
+            font-size: 4rem;
+            color: #3a86ff;
+            animation: bounce 2s infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-30px);
+            }
+
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .countdown-item {
+            background: #3a86ff;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 3rem auto;
+            max-width: 600px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            width: 65%;
+            background: #3a86ff;
+            animation: progress 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes progress {
+            from {
+                width: 65%;
+            }
+
+            to {
+                width: 68%;
+            }
+        }
+    </style>
+</head>
+
+<body class="projects-page">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="portfolio.html" class="active">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="construction">
+            <div class="construction-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h1>Projects Showcase Coming Soon!</h1>
+            <p>I'm currently curating my best C++ games, web projects, and Python experiments to share with you.</p>
+
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">07</div>
+                    <div>Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">23</div>
+                    <div>Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">45</div>
+                    <div>Minutes</div>
+                </div>
+            </div>
+
+            <p>In the meantime, check out my <a href="about.html">skills</a> or <a href="contact.html">get in touch</a>!
+            </p>
+
+            <div class="social-preview">
+                <h3>Preview of What's Coming:</h3>
+                <div class="preview-icons">
+                    <i class="fas fa-gamepad"></i>
+                    <i class="fas fa-car"></i>
+                    <i class="fas fa-snake"></i>
+                    <i class="fas fa-chess"></i>
+                    <i class="fab fa-python"></i>
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="current-year">2023</span> Eyasu Zerihun (Josh-z). All rights reserved.</p>
+        <div class="social-links">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="mailto:your.email@example.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Update copyright year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Simple countdown animation (not real countdown)
+        function animateCountdown() {
+            const numbers = {
+                days: document.getElementById('days'),
+                hours: document.getElementById('hours'),
+                minutes: document.getElementById('minutes')
+            };
+
+            setInterval(() => {
+                numbers.minutes.textContent = Math.floor(Math.random() * 60).toString().padStart(2, '0');
+                if (Math.random() > 0.7) {
+                    numbers.hours.textContent = Math.floor(Math.random() * 24).toString().padStart(2, '0');
+                }
+                if (Math.random() > 0.9) {
+                    numbers.days.textContent = Math.floor(Math.random() * 7).toString().padStart(2, '0');
+                }
+            }, 3000);
+        }
+
+        animateCountdown();
+    </script>
+</body>
+
+</html>
