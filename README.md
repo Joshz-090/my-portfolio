@@ -34,12 +34,6 @@ If you want to clone this project and run it locally:
 
 2. Open the `index.html` file in your browser to view the site.
 
-## 🎨 Future Improvements
-
-- Add JavaScript interactivity (e.g., dynamic content, form validation).
-- Update design elements and improve responsiveness.
-- Add more projects and case studies to the portfolio.
-
 ---
 
 Thanks for visiting my project! 😊
