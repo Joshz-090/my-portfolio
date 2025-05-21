@@ -22,7 +22,7 @@ You can view the website live here:
 
 ## 📫 How to Reach Me
 
-- Email: *eyasuzerihun80@gmail*
+- Email: *eyasuzerihun80@gmail.com*
 - GitHub: [@Joshz-090](https://github.com/Joshz-090)
 
 ## 🔧 Installation & Setup
