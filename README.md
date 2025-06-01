@@ -37,3 +37,4 @@ If you want to clone this project and run it locally:
 ---
 
 Thanks for visiting my project! 😊
+1
