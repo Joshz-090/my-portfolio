@@ -1,0 +1,7 @@
+<?php
+// Cloudinary Credentials - DO NOT COMMIT THE ACTUAL SECRET
+define('CLOUDINARY_CLOUD_NAME', 'your_cloud_name');
+define('CLOUDINARY_API_KEY', 'your_api_key');
+define('CLOUDINARY_API_SECRET', 'your_api_secret');
+define('CLOUDINARY_UPLOAD_URL', 'https://api.cloudinary.com/v1_1/' . CLOUDINARY_CLOUD_NAME . '/image/upload');
+?>

@@ -1,0 +1,14 @@
+# Database & Secret Configs
+config/db.php
+config/cloudinary_config.php
+
+# Environment Files
+.env
+
+# XAMPP/OS specific
+.DS_Store
+Thumbs.db
+
+# Temp/Cache
+assets/uploads/*
+!assets/uploads/.gitkeep
