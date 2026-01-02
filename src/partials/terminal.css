@@ -1,0 +1,145 @@
+/* Terminal Overlay */
+#terminal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#terminal-overlay.open {
+    display: flex;
+    opacity: 1;
+}
+
+/* Terminal Window */
+.terminal-window {
+    width: 80%;
+    max-width: 900px;
+    height: 60vh;
+    background: #0d1117; /* GitHub Dark Dimmed-ish */
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(50, 50, 50, 0.8);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
+    border: 1px solid #333;
+}
+
+/* Terminal Header (Title Bar) */
+.terminal-header {
+    background: #161b22;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.terminal-buttons {
+    display: flex;
+    gap: 8px;
+    margin-right: 15px;
+}
+
+.terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.terminal-button.red { background: #ff5f56; }
+.terminal-button.yellow { background: #ffbd2e; }
+.terminal-button.green { background: #27c93f; }
+
+.terminal-title {
+    color: #8b949e;
+    font-size: 0.9rem;
+    flex-grow: 1;
+    text-align: center;
+    margin-right: 50px; /* Balance the buttons */
+}
+
+/* Terminal Body */
+.terminal-body {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    color: #33ff00; /* Classic Terminal Green */
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Scrollbar Customization */
+.terminal-body::-webkit-scrollbar {
+    width: 8px;
+}
+.terminal-body::-webkit-scrollbar-track {
+    background: #0d1117;
+}
+.terminal-body::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+/* Output Styling */
+#terminal-output {
+    margin-bottom: 10px;
+    white-space: pre-wrap; /* Preserve formatting */
+}
+
+.command-line {
+    color: #fff;
+    font-weight: bold;
+}
+
+.response {
+    color: #e6edf3; /* Softer text for content */
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.command-echo {
+    margin-bottom: 5px;
+}
+
+.response.success { color: #27c93f; }
+.response.error { color: #ff5f56; }
+.response.info { color: #58a6ff; }
+
+/* Input Area */
+.input-line {
+    display: flex;
+    align-items: center;
+}
+
+.prompt {
+    color: #27c93f;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+#terminal-input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    flex-grow: 1;
+    outline: none;
+    caret-color: #27c93f; /* Green cursor */
+}
+
+/* Blinking Cursor Animation (Optional if regular caret isn't enough) */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}

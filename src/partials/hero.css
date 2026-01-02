@@ -1,0 +1,128 @@
+/* Cinematic Hero Section Styles */
+:root {
+    --hero-bg: #020408;
+    --hero-text: #ffffff;
+    --hero-subtitle: #b3eff6;
+    --hero-glow: rgba(59, 130, 246, 0.4);
+    --star-opacity: 0.5;
+}
+
+.light :root {
+    --hero-bg: #f8fafc; /* Lighter slate bg */
+    --hero-text: #0f172a;
+    --hero-subtitle: #475569;
+    --hero-glow: rgba(14, 165, 233, 0.2);
+    --star-opacity: 0; /* Hide stars in light mode */
+}
+
+#cinematic-hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--hero-bg);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--hero-text);
+    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#starfield {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: var(--star-opacity);
+    transition: opacity 0.8s ease;
+}
+
+.earth-container {
+    position: absolute;
+    bottom: -15%;
+    width: 120%;
+    left: -10%;
+    z-index: 2;
+    pointer-events: none;
+    transition: transform 0.1s ease-out; /* Parallax speed */
+}
+
+.earth-img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 50px var(--hero-glow));
+    transition: opacity 0.8s ease, filter 0.8s ease;
+}
+
+.earth-dark { display: block; }
+.earth-light { display: none; }
+
+.light .earth-dark { display: none; }
+.light .earth-light { display: block; }
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    font-weight: 950;
+    color: var(--hero-text);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.04em;
+    transition: color 0.8s ease;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    color: var(--hero-subtitle);
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+    max-width: 600px;
+    margin-inline: auto;
+    transition: color 0.8s ease;
+}
+
+/* Star styles for JS */
+.star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@keyframes earth-drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(1%, 2%) scale(1.02); }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .earth-container {
+        bottom: -10%;
+        width: 180%;
+        left: -40%;
+    }
+    .hero-title {
+        font-size: 2.8rem;
+    }
+}
+@media (max-width: 480px) {
+    .earth-container {
+        bottom: -5%;
+        width: 220%;
+        left: -60%;
+    }
+}

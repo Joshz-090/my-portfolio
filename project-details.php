@@ -1,0 +1,274 @@
+<?php 
+require_once 'config/db.php';
+
+$id = $_GET['id'] ?? null;
+if (!$id) { header('Location: projects.php'); exit; }
+
+// Fetch project
+$stmt = $pdo->prepare("SELECT * FROM projects WHERE id = ?");
+$stmt->execute([$id]);
+$project = $stmt->fetch();
+
+if (!$project) { header('Location: projects.php'); exit; }
+
+// Increment views
+$pdo->prepare("INSERT IGNORE INTO project_stats (project_id, views) VALUES (?, 0)")->execute([$id]);
+$pdo->prepare("UPDATE project_stats SET views = views + 1 WHERE project_id = ?")->execute([$id]);
+
+// Fetch updated stats
+$statStmt = $pdo->prepare("SELECT views, likes FROM project_stats WHERE project_id = ?");
+$statStmt->execute([$id]);
+$stats = $statStmt->fetch() ?: ['views' => 0, 'likes' => 0];
+
+// Handle comments
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
+    $name = htmlspecialchars($_POST['name']);
+    $comment = htmlspecialchars($_POST['comment']);
+    if ($name && $comment) {
+        $stmt = $pdo->prepare("INSERT INTO project_comments (project_id, name, comment) VALUES (?, ?, ?)");
+        $stmt->execute([$id, $name, $comment]);
+    }
+}
+
+// Fetch comments
+$stmt = $pdo->prepare("SELECT * FROM project_comments WHERE project_id = ? ORDER BY created_at DESC");
+$stmt->execute([$id]);
+$comments = $stmt->fetchAll();
+
+// Technology Icon Mapping
+function getTechIcon($tech) {
+    $tech = strtolower(trim($tech));
+    $baseClass = "w-5 h-5";
+    $icons = [
+        'react' => '<i class="fa-brands fa-react fa-spin text-blue-400" title="React"></i>',
+        'html' => '<i class="fa-brands fa-html5 text-orange-500" title="HTML5"></i>',
+        'css' => '<i class="fa-brands fa-css3-alt text-blue-500" title="CSS3"></i>',
+        'javascript' => '<i class="fa-brands fa-js text-yellow-400" title="JavaScript"></i>',
+        'js' => '<i class="fa-brands fa-js text-yellow-400" title="JavaScript"></i>',
+        'python' => '<i class="fa-brands fa-python text-blue-500" title="Python"></i>',
+        'php' => '<i class="fa-brands fa-php text-indigo-400" title="PHP"></i>',
+        'mysql' => '<i class="fa-solid fa-database text-blue-600" title="MySQL"></i>',
+        'sql' => '<i class="fa-solid fa-database text-gray-500" title="SQL"></i>',
+        'node' => '<i class="fa-brands fa-node-js text-green-500" title="Node.js"></i>',
+        'node.js' => '<i class="fa-brands fa-node-js text-green-500" title="Node.js"></i>',
+        'github' => '<i class="fa-brands fa-github text-gray-800 dark:text-gray-200" title="GitHub"></i>',
+        'git' => '<i class="fa-brands fa-git-alt text-orange-600" title="Git"></i>',
+        'java' => '<i class="fa-brands fa-java fa-fade text-blue-900" title="java"></i>',
+        'flask' => '
+            <svg class="'.$baseClass.' text-black" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.172 20.36c-.914-.72-1.89-1.41-2.556-2.38-1.402-1.712-2.482-3.694-3.22-5.777-.446-1.355-.6-2.808-1.174-4.11-.602-.944.103-1.978 1.138-2.28.46-.087 1.272-.522.293-.211-.878.644-.963-.585-.063-.662.615-.082.84-.585.63-1.037-.66-.43 1.6-.903.463-1.544C1.5 1.08 4.34.835 3.64 2.285 3.473 3.4 5.624 2.08 5.125 3.368c.507.619 1.9.14 1.865 1.009.74.05.993.672 1.687.72.72.325 2.022.58 2.266 1.39-.713.566-2.364-1.165-2.443.398.215 2.31.16 4.689 1.004 6.888.4 1.332 1.37 2.38 2.244 3.418.837 1.016 1.971 1.73 3.127 2.333 1.014.478 2.107.795 3.213.994.448-.343 1.24-1.617 1.938-1.08.033.604-1.388 1.263-.067 1.196.776-.234 1.314.6 1.953-.152.588.697 2.446-.446 2.027.98-.566.364-1.392.144-1.959.646-.935-.467-1.68.418-2.715.306a19.86 19.86 0 01-3.484.29c-1.912-.15-3.865-.214-5.684-.88-1.024-.297-2.023-.881-2.924-1.464zm1.615.7c1 .432 1.978.888 3.074 1.026 1.74.24 3.537.614 5.283.274-.79-.357-1.608.14-2.395-.255-.944.203-1.957-.052-2.917-.177-1.092-.486-2.27-.82-3.291-1.452-1.277-.466.66.598 1.005.685.798.453-.877-.233-1.114-.421-.668-.375-.754-.297-.066.084.139.08.276.166.42.235zm-1.904-1.346c.97.359-.004-.682-.45-.622-.196-.341-.751-.557-.36-.74-.704.244-.737-.93-1.07-.763-.744-.235-.29-1.07-1.176-1.58-.081-.54-.882-1.008-1.138-1.822-.113-.416-.905-1.613-.418-.5.414 1.072 1.143 1.99 1.75 2.907.47.873 1.027 1.786 1.885 2.33.29.278.568.703.977.79zM4.09 16.647c.033-.146.177.317 0 0zm3.954 3.497c.215-.096-.31-.12 0 0zm.526.192c-.054-.265-.24.148 0 0zm.66.275c.312-.3-.484-.188 0 0zm1.127.63c.191-.282-.61-.107 0 0zM8.19 19.728c.487-.315-.63-.004 0 0zm.494.246c-.014-.166-.176.075 0 0zm2.47 1.542c.397.25 2.32.55 1.115.103-.2.042-2.23-.574-1.116-.103zm-3.921-3.054c-.04-.167-.616-.185 0 0zm1.15.67c.3-.21-.621-.16 0 0zm.966.593c.43-.162-.696-.163 0 0zm-2.584-1.773c.466.358 1.88.046.714-.213-.53-.283-1.727-.476-.912.17zm3.24 1.978c.193-.33-.815-.19 0 0zm-.984-.783c1.14.323-.958-.72-.281-.118l.15.068.13.05zm1.973 1.14c1.08.01-.975-.147 0 0zm-4.644-2.96c-.042-.2-.266.018 0 0zm6.47 3.985c.028-.363-.353.27 0 0zm-4.63-2.856c-.064-.191-.336-.008 0 0zm-1.738-1.254c.62-.037-.848-.273 0 0zm-2.06-1.332c-.077-.297-.674-.534 0 0zm5.407 3.435c-.114-.13-.054.028 0 0zm3.366 2.065c-.01-.197-.183.075 0 0zm-3.664-2.373c.06-.255-.528-.077 0 0zm-2.506-1.592c.46-.05-.74-.311 0 0zm4.241 2.637c.718-.285-.7-.14 0 0zM9.03 18.545c.827.106-.985-.563-.181-.06zm2.876 1.768c.773-.462.518 1.082 1.311.13.782-.57-.675.707.29.103.696-.467 1.726.22 2.376.445.468-.023.923.405 1.403.145.923-.25-1.806-.37-1.09-.81-.845.245-1.47-.294-1.885-.835-.948-.22-2.044-.703-2.517-1.542-.192-.315.28.044-.166-.47-.57-.508-.856-1.085-1.24-1.702-.457-.244-.51-.963-.557-.024.004-.593-.553-.992-.688-.826-.002-.571.595-.285.176-.707-.09-.592-.386-1.21-.475-1.877-.138-.322-.02-1.011-.473-.282-.165.77-.055-.947.202-.38.337-.58-.12-.51-.14-.43.22-.488.14-1.18-.057-.916.117-.517.185-1.902-.175-1.656.218-.54.414-2.473-.534-1.736-.384.005-1.048.14-1.363.296.986.543-.1.196-.5.11-.052.502-.45.285-.946.29.793.098-.386.81-.841.534-.59.282.51.987.012 1.205.06.328-.905-.12-.83.64-.573-.241-.078.9.209.514.975.264.686.866.71 1.437-.158.333-.784-.783-.14-.731-.507-.827-.561-.3-.984.085-.1.028 1.079.547.34.803.65.1.668.67.8 1.03.39.407.31-.45.779.04-.296-.436-1.567-1.228-.544-.974-.005-.44-.185-.793.129-.784.31-.562-.325 1.387.375.672.193-.085.24-.563.59.045.505.498.182.858-.531.403.127.433.954.587.799 1.265.165.595.395.376.596.342.158.578.247.153.255-.123.72.155.552.58.778.88.497.224-.712-1.522.142-.526.898.81.337 1.15-.47 1.02.51-.041.675.69 1.313.664.582.277.975 1.34-.027.897-.348-.313-1.58-.7-.573-.104.929.43 1.665.688 2.561 1.227.64.458.918.982 1.16 1.086-.538.257-1.623-.206-.817-.348-.503-.091-1.068-.345-.587.28.41.343 1.45.306 1.637.345-.159.348-.43.376.006.403-.486.26.156.3.201.448zm-.994-2.808c-.296-.31-.373-.89-.053-.385.164.066.525.947.053.385zm3.238 2.057c.185-.011.006.14 0 0zm-3.706-2.816c-.01-.468.107.36 0 0zm-.322-.433c-.372-.72.47.204 0 0zm-3.9-2.692c.219-.06.108.374 0 0zm3.104 1.682c.134-.504.158.424 0 0zm-2.192-1.525c-.155-.278.323.26 0 0zm1.882.604c-.352-.79.25-.432.078.13zM5.77 12.217c-.158-.26-.418-1.02-.334-1.252.076.378.804 1.627.357.518-.494-.93.59.302.702.534.05.23-.305-.063-.064.478-.44-.617-.26.34-.661-.278zm-1.003-.691c.04-.603.23.413 0 0zm.45.155c.216-.455.366.634 0 0zm-1.084-.84c-.374-.37-.644-.713.017-.23.255.01-.566-.778.06-.25.66.12.327 1.082-.077.48zm.57-.015c.217-.215.115.212 0 0zm.35.113c-.328-.617.4.258 0 0zm-.697-.667c-1.086-.966 1.365.506.177.18zm3.11 1.808c-.47-.282-.123-1.984.037-.82.457-.148-.025.6.315.594-.053.473-.206.643-.35.226zm1.15.68c.048-.513.099.35 0 0zm-.2-.198c.054-.22.007.258 0 0zM4.57 9.955c-.697-.963 2.027.973.447.244-.165-.043-.364-.06-.447-.244zm2.216 1.175c-.066-.81.147.134 0 0zm1.682 1.079c.13-.462.01.305 0 0zM4.676 9.587c.415-.088 1.718.729.52.234-.132-.148-.416-.08-.52-.234zm3.56 1.775c.044-.83.248-.495.002.118zM4.985 9.299c.169-.248-.45-1.12.089-.313.232.185.672.31.283.387.61.539-.15.146-.372-.074zm3.075 1.804c.117-.944.103.553 0 0zM4.632 8.427c.129-.055.068.172 0 0zm.802.478c.206-.434.38.483 0 0zm2.263 1.259c-.002-.167.043.242 0 0zm-.131-.29c-.314-.776.292.41 0 0zm-.193-.51c-.053-.32.18.404 0 0zm.314-.51c-.216-.38.272-1.673.326-.87-.227.625-.065.975.093.136.293-.66-.063 1.303-.42.735zm.322-1.923c.094-.115.02.139 0 0zM7.47 17.544c-.128-.111.016.07 0 0zm1.11.56c.615.16.612-.095.055-.17-.3-.28-1.246-.575-.4-.035.057.142.235.139.344.206zM6.389 16.65c.34.253 1.28.719.484.096.269-.312-.514-.478-.254-.686-.66-.404-.52-.368-.058-.356-.794-.354.114-.328.07-.51-.305-.06-1.52-.54-.804.04-.726-.37-.173.138-.392.084-.743-.202.66.565-.118.375.425.337 1.146.864.18.357-.128.183.69.46.892.6zm1.16.667c1.41.454-.691-.556 0 0zm5.94 3.598c.02-.28-.193.24 0 0zm.611.257c.325-.315.013.503.54-.077.005-.415-.017-.66-.606-.156-.162.09-.234.473.066.233zm-9.692-6.087c-.1-.393-.7-.39 0 0zm.652.428c-.242-.402-.864-.364 0 0zm3.71 2.237c.362.32 1.662.236.44.04-.182-.27-1.151-.204-.44-.04zm5.097 3.149c.558-.468-.54.208 0 0zm1.16.796c.003-.15-.24.066 0 0zm.001-.21c.617-.654-.598.039 0 0zM2.805 13.743c-.526-.75-.327-1.088-.835-1.7-.096-.47-.87-1.533-.4-.406.43.659.558 1.679 1.235 2.106zm12.03 7.534c1.135-.734-.466-.32 0 0zm.866.34c.57-.488-.36-.102 0 0zM4.215 14.255c.163-.242-.42-.031 0 0zm11.305 7.129c.551-.355-.126-.3-.1.032zm-7.47-4.71c-.02-.24-.291.02 0 0zm.46.267c-.145-.297-.224.047 0 0zm7.894 4.684c.705-.51-.428-.098-.148.096zm-.27-.13c.574-.482-.607.213 0 0zm1.38.918c.386-.258-.469-.083 0 0zM4.57 14.08c.517.116 2.066 1.274 1.152.08-.468-.138-.187-1.283-.665-1.08.32.535.264.763-.41.426-.845-.413-.474.204-.31.374-.224.052.299.196.233.2zm-2.356-1.86c.092-.383-.853-2.107-.446-.864.146.26.13.754.446.864zm4.324 2.666c-.266-.223-.013-.032 0 0zm.656.152c0-.405-.725-.164 0 0zm5.681 3.583c-.108-.278-.428-.006 0 0zm.273.199c-.04-.155-.157.03 0 0zM15.4 20.24c.216-.16-.27-.02 0 0zM3.39 12.52c.62-.24-.664-.17 0 0zm8.984 5.662c-.007-.401-.395.1 0 0zm-9.23-6.231c.399-.135-.367-.09 0 0zm1.156.56c-.007-.133-.122.05 0 0zm14.09 8.64c.512-.104 1.678.26 1.866-.136-.62-.015-2.15-.438-2.222.1l.136.023.22.013zM4.667 12.603c.009-.407-.317-.015 0 0zM1.63 10.495c-.138-.775-.525-.118 0 0zm.724.182c.009-.25-.663-.224 0 0zm.414.203c-.12-.097-.094.122 0 0zm2.605 1.67c.122-.112-.29-.083 0 0zm-2.88-2.128c-.07-.585-.84-.088 0 0zm-1.486-.964c-.02-.27-.144.102 0 0zm.22-.167c-.035-.32-.19.04 0 0zm1.22.729c.518-.203-.94-.42-.104-.04zm16.334 10.089c.33-.303-.42-.094 0 0zm1.974 1.023c.132-.392-.334.05 0 0zM2.573 9.38c.055-.38-.41.075 0 0zM.837 8.218c-.093-.535-.08-1.474.812-1.156-1.191.236.824 1.48.57.498.5.024.98-.296.716.19.987-.11 1.67-.964 2.624-.845.742-.098 1.554-.172 2.354-.471.658-.048 1.29-.756.93-1.175-.896-.076-1.835.036-2.827.233-1.098.228-2.096.662-3.205.849-1.08.145.217.4-.092.456-.564.196.672.328-.073.534-.46-.088-.94-.246-.743-.73-1.035.133-1.945.563-1.127 1.616h.06zm2.494-1.27c.243-.894 1.3.735.398.118-.108-.08-.285-.146-.398-.12zm.047-.434c.35-.26.186.146 0 0zm.445.008c.032-.411 1.018.218.163.148zm.608-.245c.222-.26.064.23 0 0zm.156-.104c.37-.444 2.095-.283.832-.043-.338-.255-.598.15-.832.043zm2.25-.347c-.055-1.214 1.119.432 0 0zm.64-.004c.233-.612.906-.245.108-.123.017.065-.024.316-.108.123zM2.322 9.067c.697-.427-.741-.37 0 0zm.515.144c.245-.26-.531-.106 0 0zm-1.52-1.08c.399-.305-.471-.116 0 0zm20.602 12.89c.012-.355-.304.16 0 0zm-2.093-1.43c.06-.408-.27.037 0 0zm2.67 1.568c.557 0 1.688-.173.475-.173-.19.03-1.109.024-.476.173zM3.29 8.959c.45-.03.706-.497-.087-.47-1.23-.127 1.084.42-.158.264-.167.11.236.237.245.207zm.398.202c-.048-.29-.14.154 0 0zm.47-1.257c.197-.243-.27-.065 0 0zm-1.5-2.508c.806-.274 1.907-.581 2.287.135-.387-.466-.156-.924.21-.243.516.689.775-.313.438-.545.383.476.819.7.257.03.61-.734-1.223.097-1.64.088-.2.09-2.071.477-1.551.535zm.472-.903c.46-.347 1.588.206.864-.345-.07-.062-1.586.418-.864.345zm1.674.069c.538.013-.231-.722.409-.39-.105-.343-.746-.407-1.06-.544-.176.314.36.938.65.934zm-1.38-1.52c.186-.252-.326.128 0 0zm.684.164c.866-.115-.22-.373-.174-.01zm-1.277-1c-.61-.796 1.146.134.527-.7-.522-.415-1.023.468-.527.7zm7.824 4.215c.28-.496-1.155-.668-.188-.175.09.03.07.21.188.175z"/>
+            </svg>',
+        'tailwind' => '
+            <svg class="'.$baseClass.' text-cyan-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.1267 6.21913C9.17785 5.37821 10.4989 5 12.0014 5C13.41 5 14.4863 5.33092 15.3593 5.83363C16.0983 6.25922 16.7127 6.84126 17.3072 7.44492C17.953 8.10062 18.3034 8.41984 18.7437 8.52979C19.217 8.64811 19.617 8.61249 19.9825 8.45585C20.3621 8.29317 20.7745 7.96918 21.2014 7.4L22.9715 8.24254C22.6005 9.72673 21.9241 10.9425 20.8761 11.7809C19.8249 12.6218 18.5038 13 17.0014 13C15.5931 13 14.517 12.669 13.6441 12.1664C12.8103 11.6862 12.2012 11.068 11.7232 10.583C11.0611 9.9112 10.7056 9.5817 10.2591 9.47021C9.78583 9.35189 9.3858 9.38751 9.02031 9.54415C8.64071 9.70683 8.22828 10.0308 7.80139 10.6L6.03125 9.75746C6.4023 8.27328 7.07869 7.05754 8.1267 6.21913ZM12.0014 7C11.1728 7 10.5057 7.14609 9.96802 7.40781C11.2881 7.49046 12.1492 8.30299 13.0247 9.12911C13.5289 9.60492 14.0379 10.0852 14.6422 10.4332C15.2012 10.7551 15.9313 11 17.0014 11C17.8299 11 18.497 10.8539 19.0347 10.5922C17.7147 10.5095 16.8538 9.69708 15.9786 8.87101C15.4744 8.39515 14.9655 7.91478 14.3612 7.56679C13.8022 7.24491 13.0719 7 12.0014 7ZM3.1267 12.2191C4.17785 11.3782 5.49894 11 7.00139 11C8.41001 11 9.48634 11.3309 10.3593 11.8336C11.0983 12.2592 11.7127 12.8413 12.3072 13.4449C12.953 14.1006 13.3034 14.4198 13.7437 14.5298C14.217 14.6481 14.617 14.6125 14.9825 14.4559C15.3621 14.2932 15.7745 13.9692 16.2014 13.4L17.9715 14.2425C17.6005 15.7267 16.9241 16.9425 15.8761 17.7809C14.8249 18.6218 13.5038 19 12.0014 19C10.5931 19 9.51701 18.669 8.64412 18.1664C7.81033 17.6862 7.20115 17.068 6.72319 16.583C6.06109 15.9112 5.70557 15.5817 5.25911 15.4702C4.78583 15.3519 4.3858 15.3875 4.02031 15.5441C3.64071 15.7068 3.22828 16.0308 2.80139 16.6L1.03125 15.7575C1.4023 14.2733 2.07869 13.0575 3.1267 12.2191ZM7.00136 13C6.17284 13 5.50571 13.1461 4.96802 13.4078C6.28809 13.4905 7.14918 14.303 8.02466 15.1291L8.02467 15.1291C8.52891 15.6049 9.03793 16.0852 9.64217 16.4332C10.2012 16.7551 10.9313 17 12.0014 17C12.8299 17 13.497 16.8539 14.0347 16.5922C12.7147 16.5095 11.8538 15.6971 10.9786 14.871C10.4744 14.3952 9.96546 13.9148 9.36117 13.5668C8.80225 13.2449 8.0719 13 7.00136 13Z"/>
+            </svg>',
+        'typescript' => '
+            <svg class="'.$baseClass.' text-blue-600" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z"/>
+            </svg>',
+        'django' => '
+            <svg class="'.$baseClass.' text-[#092e20]" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.146 0h3.924v18.166c-2.013.382-3.491.535-5.096.535-4.791 0-7.288-2.166-7.288-6.32 0-4.002 2.65-6.6 6.753-6.6.637 0 1.121.05 1.707.203zm0 9.143a3.894 3.894 0 00-1.325-.204c-1.988 0-3.134 1.223-3.134 3.365 0 2.09 1.096 3.236 3.109 3.236.433 0 .79-.025 1.35-.102V9.142zM21.314 6.06v9.098c0 3.134-.229 4.638-.917 5.937-.637 1.249-1.478 2.039-3.211 2.905l-3.644-1.733c1.733-.815 2.574-1.53 3.109-2.625.561-1.121.739-2.421.739-5.835V6.059h3.924zM17.39.021h3.924v4.026H17.39z"/>
+            </svg>',
+        'mongodb' => '
+            <svg class="'.$baseClass.' text-green-500" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.193 9.555c-1.264-5.58-4.252-7.414-4.573-8.115-.28-.394-.53-.954-.735-1.44-.036.495-.055.685-.523 1.184-.723.566-4.438 3.682-4.74 10.02-.282 5.912 4.27 9.435 4.888 9.884l.07.05A73.49 73.49 0 0111.91 24h.481c.114-1.032.284-2.056.51-3.07.417-.296.604-.463.85-.693a11.342 11.342 0 003.639-8.464c.01-.814-.103-1.662-.197-2.218zm-5.336 8.195s0-8.291.275-8.29c.213 0 .49 10.695.49 10.695-.381-.045-.765-1.76-.765-2.405z"/>
+            </svg>',
+        'vite' => '
+        <svg class="'.$baseClass.'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path class="text-purple-600" fill="currentColor" d="M23.262 2.652L17.284 3.74l-.544 1.887 2.077-.4a.8.8 0 0 1 .84.369.8.8 0 0 1 .034.783L12.9 19.93l-.013.025-.015.023-.122.19a.801.801 0 0 1-.672.37.826.826 0 0 1-.634-.302.8.8 0 0 1-.16-.67l1.029-4.981-1.12.34a.81.81 0 0 1-.86-.262.802.802 0 0 1-.165-.67l.63-3.08-2.027.468a.808.808 0 0 1-.768-.233.81.81 0 0 1-.217-.6l.389-6.57-7.44-1.33a.612.612 0 0 0-.64.906L11.58 23.691a.612.612 0 0 0 1.066-.004l11.26-20.135a.612.612 0 0 0-.644-.9z"/>
+            
+            <path class="text-yellow-400" fill="currentColor" d="m8.286 10.578.512-8.657a.306.306 0 0 1 .247-.282L17.377.006a.306.306 0 0 1 .353.385l-1.558 5.403a.306.306 0 0 0 .352.385l2.388-.46a.306.306 0 0 1 .332.438l-6.79 13.55-.123.19a.294.294 0 0 1-.252.14c-.177 0-.35-.152-.305-.369l1.095-5.301a.306.306 0 0 0-.388-.355l-1.433.435a.306.306 0 0 1-.389-.354l.69-3.375a.306.306 0 0 0-.37-.36l-2.32.536a.306.306 0 0 1-.374-.316z"/>
+        </svg>',
+        'bootstrap' => '
+            <svg class="'.$baseClass.' text-purple-700" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.42333 3.03818C4.13949 3.03818 3.18953 4.16184 3.23206 5.38047C3.27286 6.55123 3.21985 8.0675 2.83811 9.30405C2.45523 10.5442 1.80769 11.3298 0.75 11.4307V12.5694C1.80769 12.6703 2.45523 13.4559 2.83811 14.696C3.21985 15.9326 3.27286 17.4489 3.23206 18.6196C3.18953 19.8381 4.13949 20.9619 5.42352 20.9619H18.5784C19.8622 20.9619 20.812 19.8382 20.7695 18.6196C20.7287 17.4489 20.7817 15.9326 21.1634 14.696C21.5465 13.4559 22.1923 12.6703 23.25 12.5694V11.4307C22.1923 11.3298 21.5465 10.5442 21.1634 9.30405C20.7817 8.06769 20.7287 6.55123 20.7695 5.38047C20.812 4.16203 19.8622 3.03818 18.5784 3.03818H5.42314H5.42333ZM16.0042 14.0714C16.0042 15.7493 14.7526 16.767 12.6756 16.767H9.13983C9.03869 16.767 8.94169 16.7268 8.87017 16.6553C8.79865 16.5838 8.75847 16.4868 8.75847 16.3856V7.61445C8.75847 7.51331 8.79865 7.41631 8.87017 7.34479C8.94169 7.27327 9.03869 7.23309 9.13983 7.23309H12.6554C14.3873 7.23309 15.5239 8.17123 15.5239 9.61161C15.5239 10.6226 14.7593 11.5277 13.7851 11.6862V11.739C15.1113 11.8845 16.0042 12.8028 16.0042 14.0714ZM12.29 8.44199H10.274V11.2896H11.972C13.2846 11.2896 14.0084 10.761 14.0084 9.81621C14.0084 8.93089 13.386 8.44199 12.29 8.44199ZM10.274 12.4195V15.5577H12.3642C13.7308 15.5577 14.4548 15.0093 14.4548 13.9787C14.4548 12.9479 13.7106 12.4193 12.2763 12.4193L10.274 12.4195Z" />
+            </svg>',
+    ];
+    
+    return isset($icons[$tech]) ? $icons[$tech] : '<span class="text-xs uppercase font-bold px-3 py-1 border border-gray-200 dark:border-gray-700 rounded-full">' . htmlspecialchars($tech) . '</span>';
+}
+
+include_once 'src/partials/header.php'; 
+?>
+
+<div class="max-w-5xl mx-auto px-4 py-12">
+    <!-- Breadcrumb -->
+    <nav class="mb-10 animate-fade-in">
+        <a href="projects.php" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-primary transition-colors group">
+            <i class="fa-solid fa-chevron-left mr-2 text-[10px] group-hover:-translate-x-1 transition-transform"></i>
+            Back to Projects
+        </a>
+    </nav>
+    
+    <div class="grid lg:grid-cols-3 gap-12">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-10">
+            <!-- Header -->
+            <header>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight"><?php echo htmlspecialchars($project['title']); ?></h1>
+                
+                <!-- Stats Row -->
+                <div class="flex items-center gap-6 text-gray-400 text-sm mb-8 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-800 w-fit">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-eye text-primary"></i>
+                        <span class="font-bold text-gray-700 dark:text-gray-300"><?php echo number_format($stats['views']); ?> <span class="font-normal text-gray-400 lowercase ml-0.5">Views</span></span>
+                    </div>
+                    <div class="h-4 w-px bg-gray-200 dark:bg-gray-800"></div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-heart text-red-500"></i>
+                        <span id="like-count-project-<?php echo $project['id']; ?>" class="font-bold text-gray-700 dark:text-gray-300"><?php echo number_format($stats['likes']); ?> <span class="font-normal text-gray-400 lowercase ml-0.5">Likes</span></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Featured Image -->
+            <div class="aspect-video rounded-[2.5rem] overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-2xl shadow-primary/5 group border-8 border-white dark:border-gray-900">
+                <img src="<?php echo htmlspecialchars($project['image_url']); ?>" alt="..." class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            </div>
+
+            <!-- Description -->
+            <div class="prose dark:prose-invert max-w-none">
+                <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                    <span class="w-1.5 h-8 bg-primary rounded-full"></span>
+                    Project Overview
+                </h3>
+                <div class="text-gray-600 dark:text-gray-400 leading-relaxed space-y-4 text-lg">
+                    <?php echo nl2br(htmlspecialchars($project['description'])); ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar / Actions -->
+        <div class="space-y-8">
+            <!-- Tech Stack Card -->
+            <div class="p-8 bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm">
+                <h4 class="text-lg font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-primary text-sm"></i>
+                    Technologies Used
+                </h4>
+                <div class="flex flex-wrap gap-4">
+                    <?php foreach (explode(',', $project['tech_stack']) as $tech): ?>
+                        <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:scale-105 transition-transform cursor-help">
+                            <span class="text-xl"><?php echo getTechIcon($tech); ?></span>
+                            <span class="text-xs font-semibold text-gray-600 dark:text-gray-400 capitalize"><?php echo trim($tech); ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-4">
+                <?php if ($project['live_url']): ?>
+                    <a href="<?php echo $project['live_url']; ?>" target="_blank" 
+                       class="flex items-center justify-center gap-3 w-full bg-primary text-white py-4 px-6 rounded-2xl font-bold hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-[1.02]">
+                        <i class="fa-solid fa-rocket"></i>
+                        Launch Live Demo
+                    </a>
+                <?php endif; ?>
+                
+                <?php if ($project['github_url']): ?>
+                    <a href="<?php echo $project['github_url']; ?>" target="_blank" 
+                       class="flex items-center justify-center gap-3 w-full bg-dark dark:bg-gray-800 text-white py-4 px-6 rounded-2xl font-bold hover:shadow-xl transition-all hover:scale-[1.02] border border-transparent hover:border-primary/50">
+                        <i class="fa-brands fa-github"></i>
+                        Source Code
+                    </a>
+                <?php endif; ?>
+
+                <button onclick="toggleLike(event, 'project', <?php echo $project['id']; ?>)" 
+                        class="flex items-center justify-center gap-3 w-full bg-red-50 dark:bg-red-900/10 text-red-500 py-4 px-6 rounded-2xl font-bold hover:bg-red-500 hover:text-white transition-all">
+                    <i class="fa-solid fa-heart"></i>
+                    Like Project
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <section class="mt-24 pt-20 border-t border-gray-100 dark:border-gray-800">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div>
+                <h3 class="text-3xl font-bold mb-2">Community <span class="text-primary italic">Feedback</span></h3>
+                <p class="text-gray-500 text-sm">See what others are saying or share your thoughts.</p>
+            </div>
+            
+            <button onclick="toggleCommentForm()" id="commentToggleBtn" class="inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-full font-bold hover:scale-105 transition-all text-sm">
+                <i class="fa-solid fa-comment-dots"></i>
+                <span id="commentToggleText">Add Comment</span>
+            </button>
+        </div>
+        
+        <!-- Comment Form (Hidden by default) -->
+        <div id="commentFormContainer" class="hidden overflow-hidden transition-all duration-500 mb-16">
+            <div class="p-8 bg-gray-50 dark:bg-gray-900/50 rounded-[2.5rem] border border-gray-100 dark:border-gray-800">
+                <form action="" method="POST" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-wider text-gray-400 ml-4">Full Name</label>
+                            <input type="text" name="name" placeholder="John Doe" required 
+                                   class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-primary transition-all">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-gray-400 ml-4">Your Feedback</label>
+                        <textarea name="comment" placeholder="What do you think about this project?" required rows="4" 
+                                  class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-primary transition-all"></textarea>
+                    </div>
+                    <button type="submit" name="submit_comment" class="bg-primary text-white px-10 py-4 rounded-2xl font-bold hover:shadow-xl shadow-primary/20 transition-all">
+                        Post Discussion
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <?php foreach ($comments as $c): ?>
+                <div class="p-8 bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm hover:border-primary/30 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                <?php echo strtoupper(substr($c['name'], 0, 1)); ?>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-gray-900 dark:text-white"><?php echo htmlspecialchars($c['name']); ?></h5>
+                                <p class="text-[10px] uppercase font-bold text-gray-400 tracking-widest mt-0.5"><?php echo date('M d, Y', strtotime($c['created_at'])); ?></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed"><?php echo nl2br(htmlspecialchars($c['comment'])); ?></p>
+                </div>
+            <?php endforeach; ?>
+            <?php if (empty($comments)): ?>
+                <div class="col-span-full py-16 text-center">
+                    <i class="fa-solid fa-comments text-4xl text-gray-200 dark:text-gray-800 mb-4 block"></i>
+                    <p class="text-gray-400 italic font-medium">No comments yet. Be the first to start the conversation!</p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+</div>
+
+<script>
+function toggleCommentForm() {
+    const container = document.getElementById('commentFormContainer');
+    const text = document.getElementById('commentToggleText');
+    const btn = document.getElementById('commentToggleBtn');
+    
+    if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        container.style.display = 'block';
+        text.innerText = 'Close Form';
+        btn.classList.add('bg-red-500', 'text-white');
+        btn.classList.remove('bg-gray-900', 'dark:bg-white', 'dark:text-gray-900');
+        container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        container.classList.add('hidden');
+        container.style.display = 'none';
+        text.innerText = 'Add Comment';
+        btn.classList.remove('bg-red-500');
+        btn.classList.add('bg-gray-900', 'dark:bg-white', 'dark:text-gray-900');
+    }
+}
+</script>
+
+<?php include_once 'src/partials/footer.php'; ?>
