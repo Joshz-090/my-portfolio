@@ -2,7 +2,7 @@
 
 A premium, full-stack personal portfolio website built with PHP, Vanilla CSS, and Tailwind CSS. Featuring a cinematic space-themed UI, high-end animations, and a custom mini-CMS for managing projects, blogs, and testimonials.
 
-![Portfolio Preview](assets/images/cinematic_earth_hero.png)
+![Portfolio Preview](assets/images/image.png)
 
 ## ✨ Features
 
