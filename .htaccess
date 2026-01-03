@@ -5,10 +5,17 @@ RewriteCond %{HTTP_HOST} !^localhost [NC]
 RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
 RewriteCond %{SERVER_ADDR} !=127.0.0.1
 RewriteCond %{SERVER_ADDR} !=::1
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=302]
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Prevent Directory Listing
 Options -Indexes
+
+# Security Headers (Optional but recommended for "Deceptive Site" issues)
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
 
 # Custom Error Pages (optional but recommended)
 # ErrorDocument 404 /404.php
