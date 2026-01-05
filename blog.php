@@ -21,7 +21,7 @@ if (!empty($category) && $category !== 'all') {
     $params[] = $category;
 }
 
-$query .= " ORDER BY created_at DESC";
+$query .= " ORDER BY views DESC, created_at DESC";
 
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);

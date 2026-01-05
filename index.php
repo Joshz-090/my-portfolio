@@ -78,6 +78,24 @@ include_once 'src/partials/header.php';
                         <span class="font-semibold">scalable solutions</span>, and <span class="font-semibold">continuous learning</span> 
                         - always staying ahead of the curve in this rapidly evolving tech landscape.
                     </p>
+                    <div class="flex flex-wrap gap-4 mt-8">
+                        <div class="px-3 py-1.5 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-2">
+                            <i class="fas fa-university text-red-600 text-xs"></i>
+                            <span class="text-xs font-bold text-gray-700 dark:text-gray-300">CS50 CS</span>
+                        </div>
+                        <div class="px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center gap-2">
+                            <i class="fab fa-python text-blue-600 text-xs"></i>
+                            <span class="text-xs font-bold text-gray-700 dark:text-gray-300">CS50 Python</span>
+                        </div>
+                        <div class="px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-xl flex items-center gap-2">
+                            <i class="fas fa-brain text-purple-600 text-xs"></i>
+                            <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Udacity AI</span>
+                        </div>
+                        <div class="px-3 py-1.5 bg-teal-500/10 border border-teal-500/20 rounded-xl flex items-center gap-2">
+                            <i class="fas fa-chart-line text-teal-600 text-xs"></i>
+                            <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Udacity Data</span>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="pt-6">

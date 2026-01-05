@@ -54,8 +54,15 @@ function getTechIcon($tech) {
     return isset($icons[$tech]) ? $icons[$tech] : '<span class="text-xs uppercase font-bold px-3 py-1 border border-gray-200 dark:border-gray-700 rounded-full">' . htmlspecialchars($tech) . '</span>';
 }
 
-// Fetch projects
-$stmt = $pdo->query("SELECT * FROM projects WHERE status = 'published' ORDER BY created_at DESC");
+// Fetch projects with stats, sorted by views desc
+$query = "
+    SELECT p.*, COALESCE(ps.views, 0) as views, COALESCE(ps.likes, 0) as likes 
+    FROM projects p 
+    LEFT JOIN project_stats ps ON p.id = ps.project_id 
+    WHERE p.status = 'published' 
+    ORDER BY ps.views DESC, p.created_at DESC
+";
+$stmt = $pdo->query($query);
 $projects = $stmt->fetchAll();
 ?>
 
@@ -68,10 +75,8 @@ $projects = $stmt->fetchAll();
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <?php foreach ($projects as $project): ?>
             <?php 
-                // Fetch stats
-                $statStmt = $pdo->prepare("SELECT views, likes FROM project_stats WHERE project_id = ?");
-                $statStmt->execute([$project['id']]);
-                $stats = $statStmt->fetch() ?: ['views' => 0, 'likes' => 0];
+                // Stats now come from the main query
+                $stats = ['views' => $project['views'], 'likes' => $project['likes']];
             ?>
             <article class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 h-full flex flex-col">
                 <!-- Thumbnail -->

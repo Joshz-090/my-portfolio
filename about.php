@@ -136,6 +136,89 @@ include_once 'src/partials/header.php';
                     </div>
                 </div>
 
+                <!-- Professional Certifications -->
+                <div class="relative group mt-12">
+                    <div class="absolute -left-6 top-0 w-1 h-full bg-gradient-to-b from-yellow-500 to-orange-600 rounded-full"></div>
+                    <div class="pl-8">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-12 h-12 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl flex items-center justify-center">
+                                <span class="text-2xl">📜</span>
+                            </div>
+                            <h2 class="text-3xl font-bold">Professional Certifications</h2>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- CS50 Card -->
+                            <div class="group/card p-4 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-red-500 transition-all duration-300">
+                                <div class="relative overflow-hidden rounded-xl mb-4 aspect-video bg-gray-100 dark:bg-gray-700">
+                                    <img src="assets/images/cs50.png" class="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500" alt="CS50 Certificate">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center">
+                                        <a href="assets/images/cs50.png" target="_blank" class="p-2 bg-white rounded-full text-red-600 hover:scale-110 transition-transform">
+                                            <i class="fas fa-expand"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-1">CS50: Computer Science</h3>
+                                <p class="text-xs text-primary font-medium mb-2 uppercase tracking-wider">Harvard University</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    Foundational concepts of computer science and programming.
+                                </p>
+                            </div>
+
+                            <!-- CS50 Python Card -->
+                            <div class="group/card p-4 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 transition-all duration-300">
+                                <div class="relative overflow-hidden rounded-xl mb-4 aspect-video bg-gray-100 dark:bg-gray-700">
+                                    <img src="assets/images/python.png" class="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500" alt="CS50 Python Certificate">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center">
+                                        <a href="assets/images/python.png" target="_blank" class="p-2 bg-white rounded-full text-blue-600 hover:scale-110 transition-transform">
+                                            <i class="fas fa-expand"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-1">CS50: Python Programming</h3>
+                                <p class="text-xs text-primary font-medium mb-2 uppercase tracking-wider">Harvard University</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    Advanced Python programming and application development.
+                                </p>
+                            </div>
+
+                            <!-- Udacity AI Card -->
+                            <div class="group/card p-4 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all duration-300">
+                                <div class="relative overflow-hidden rounded-xl mb-4 aspect-video bg-gray-100 dark:bg-gray-700">
+                                    <img src="assets/images/ai.png" class="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500" alt="Udacity AI Certificate">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center">
+                                        <a href="assets/images/ai.png" target="_blank" class="p-2 bg-white rounded-full text-purple-600 hover:scale-110 transition-transform">
+                                            <i class="fas fa-expand"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-1">AI Fundamentals</h3>
+                                <p class="text-xs text-primary font-medium mb-2 uppercase tracking-wider">Udacity Nanodegree</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    Exploring intelligent systems and machine learning models.
+                                </p>
+                            </div>
+
+                            <!-- Udacity Data Analysis Card -->
+                            <div class="group/card p-4 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-teal-500 transition-all duration-300">
+                                <div class="relative overflow-hidden rounded-xl mb-4 aspect-video bg-gray-100 dark:bg-gray-700">
+                                    <img src="assets/images/dataanalysis.png" class="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500" alt="Udacity Data Analysis Certificate">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center">
+                                        <a href="assets/images/dataanalysis.png" target="_blank" class="p-2 bg-white rounded-full text-teal-600 hover:scale-110 transition-transform">
+                                            <i class="fas fa-expand"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-1">Data Analysis</h3>
+                                <p class="text-xs text-primary font-medium mb-2 uppercase tracking-wider">Udacity Nanodegree</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                    Processing and visualizing data to drive insight.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Philosophy -->
                 <div class="relative group">
                     <div class="absolute -left-6 top-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-600 rounded-full"></div>
